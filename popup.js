@@ -5,15 +5,9 @@ function save_slide_time_options() {
 
     var slide_time = document.getElementById('slide_time').value;
 
-    chrome.storage.sync.set({
-        slide_time: slide_time,
-    }, function () {
-        var status = document.getElementById('slide_status');
-        status.textContent = 'Options saved.';
-        setTimeout(function () {
-            status.textContent = '';
-        }, 750);
-    });
+    chrome.storage.sync.set(
+        { slide_time: slide_time }
+    );
 
     // Reload the Power BI page upon updating the Slide Time. This is necessary in case the loop has already started
     // because it would need to be reloaded with the updated Slide Time value.
@@ -28,15 +22,9 @@ function save_refresh_time_options() {
 
     var refresh_time = document.getElementById('refresh_time').value;
 
-    chrome.storage.sync.set({
-        refresh_time: refresh_time,
-    }, function () {
-        var status = document.getElementById('refresh_status');
-        status.textContent = 'Options saved.';
-        setTimeout(function () {
-            status.textContent = '';
-        }, 750);
-    });
+    chrome.storage.sync.set(
+        { refresh_time: refresh_time }
+    );
 
     // Reload the Power BI page upon updating the Refresh Time. This is necessary in case the loop has already started
     // because it would need to be reloaded with the updated Refresh Time value.
@@ -52,7 +40,9 @@ function stop_execution() {
         { execute_trigger: 0 },
         function () {
             chrome.runtime.sendMessage({ execute: "stop" });
-            window.close();
+            setTimeout(function () {
+                window.close();
+            }, 500);
         }
     )
 }
@@ -62,7 +52,9 @@ function start_execution() {
         { execute_trigger: 1 },
         function () {
             chrome.runtime.sendMessage({ execute: "start" });
-            window.close();
+            setTimeout(function () {
+                window.close();
+            }, 500);
         }
     )
 }
@@ -72,8 +64,8 @@ function restore_options() {
     chrome.storage.sync.get({
         slide_time: 25, refresh_time: 180
     }, function (items) {
-            document.getElementById('slide_time').value = items.slide_time;
-            document.getElementById('refresh_time').value = items.refresh_time;
+        document.getElementById('slide_time').value = items.slide_time;
+        document.getElementById('refresh_time').value = items.refresh_time;
     });
 }
 

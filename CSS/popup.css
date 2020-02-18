@@ -1,0 +1,13 @@
+body {
+    width: 300px;
+    display: flex;
+    flex-direction: column;
+}
+
+h4 {
+    flex: 2;
+}
+
+select {
+    width: 10px;
+}
