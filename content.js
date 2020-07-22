@@ -71,8 +71,9 @@ function ImportRefresh() {
 function GetNames() {
 
     // Retrieve the name of the currently selected Workspace from the top left-hand corner of the page.
-    var $spans = $("span.pbi-fcl-np[ng-bind='breadcrumb.label']").first();
-    var workspaceName = $spans.text();
+    //var $spans = $("span.pbi-fcl-np[ng-bind='breadcrumb.label']").first();
+    var $spans = $("a.ng-tns-c11-7.ng-star-inserted[queryparamshandling='preserve']").first();
+    var workspaceName = $spans.text().trim();
     chromeWorkspaceName = workspaceName;
 
     // Retrieve the name of the currently selected report from the top left-hand corner of the page.
@@ -290,12 +291,12 @@ window.onload = function () {
         function (items) {
 
             // Retrieve the name of the currently selected Workspace from the top left-hand corner of the page.
-            var $spans = $("span.pbi-fcl-np[ng-bind='breadcrumb.label']").first();
-            var workspaceName = $spans.text();
+            var $spans = $("a.ng-tns-c11-7.ng-star-inserted[queryparamshandling='preserve']").first();
+            var workspaceName = $spans.text().trim();
 
             // Retrieve the name of the currently selected report from the top left-hand corner of the page.
-            var $spans = $("span.pbi-fcl-np[ng-bind='breadcrumb.label']").last();
-            var reportName = $spans.text();
+            var reportTitle = $("title").text();
+            var reportName = reportTitle.replace(' - Power BI', '');
 
             // Write Chrome variables to global variables.
             console.log("Retrieving variables from Chrome.Storage.");
