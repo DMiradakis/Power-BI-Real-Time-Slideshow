@@ -12,7 +12,7 @@ var chromeReportName;
 function ImportRefresh() {
 
     // Retrieve the name of the currently selected report from the top left-hand corner of the page.
-    var reportTitle = $("title").text();
+    var reportTitle = $("head > title").text();
     reportTitle = reportTitle.replace(' - Power BI', '');
 
     // Invoke listener for added list item under Datasets on the quick access navigation pane.
@@ -77,7 +77,7 @@ function GetNames() {
     chromeWorkspaceName = workspaceName;
 
     // Retrieve the name of the currently selected report from the top left-hand corner of the page.
-    var reportTitle = $("title").text();
+    var reportTitle = $("head > title").text();
     reportTitle = reportTitle.replace(' - Power BI', '');
     chromeReportName = reportTitle;
 
@@ -101,7 +101,7 @@ function GetNames() {
 function DetermineConnectivityMode() {
 
     // Retrieve the name of the currently selected report from the top left-hand corner of the page.
-    var reportTitle = $("title").text();
+    var reportTitle = $("head > title").text();
     reportTitle = reportTitle.replace(' - Power BI', '');
 
     // Invoke listener for added list item under Datasets on the quick access navigation pane.
@@ -291,7 +291,7 @@ window.onload = function () {
             var workspaceName = $spans.text().trim();
 
             // Retrieve the name of the currently selected report from the top left-hand corner of the page.
-            var reportTitle = $("title").text();
+            var reportTitle = $("head > title").text();
             var reportName = reportTitle.replace(' - Power BI', '');
 
             // Write Chrome variables to global variables.
