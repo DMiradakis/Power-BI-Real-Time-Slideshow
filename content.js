@@ -104,29 +104,25 @@ function DetermineConnectivityMode() {
     var reportTitle = $("title").text();
     reportTitle = reportTitle.replace(' - Power BI', '');
 
-    // Invoke listener for the Power BI Visuals to render in their container.
-    $(document).mutationSummary("connect", NavigateQuickAccessPane, [{ element: "visual-container-modern" }]);
+    // Invoke listener for added list item under Datasets on the quick access navigation pane.
+    $("div.quickAccessPanePlaceHolder").mutationSummary("connect", QuickAccessPaneLoaded, [{ element: "li.item.ng-star-inserted[title='" + reportTitle + "']" }]);
 
-    function NavigateQuickAccessPane(mSummary) {
+    // Find the main expansion button for the Quick Access Navigation Pane.
+    var $paneExpanderButton = $("button.paneExpanderButton.expanderBtn");
 
-        // Disconnect listener.
-        $(document).mutationSummary("disconnect", NavigateQuickAccessPane, [{ element: "visual-container-modern" }]);
+    // Check the button to see if the pane is expanded.
+    if ($paneExpanderButton.attr("aria-expanded") == "false") {
+        console.log("Clicking the pane Expander Button to unhide the Quick Access Navigation Pane.");
+        $paneExpanderButton.click(function () { console.log("Click finished"); });
+    }
 
-        if (mSummary[0]["added"].length) {
+    // Find the expansion button for the workspace's contents on the Quick Access Navigation Pane.
+    var $workspaceExpanderButton = $("div.paneExpanderHeader > button.expanderButton.switcher")
 
-            // Invoke listener for added list item under Datasets on the quick access navigation pane.
-            $("div.quickAccessPanePlaceHolder").mutationSummary("connect", QuickAccessPaneLoaded, [{ element: "li.item.ng-star-inserted[title='" + reportTitle + "']" }]);
-
-            // Expand the navigation pane for the current Workspace.
-            console.log("Expanding the quick access navigation pane.");
-
-            if ($("button.expanderButton", "div.paneExpanderHeader")) {
-                console.log("Expansion button found.");
-                // Click the expansion button.
-                $("button.expanderButton", "div.paneExpanderHeader").click();
-            }
-
-        }
+    // Check the button to see if the workspace contents are expanded.
+    if ($workspaceExpanderButton.attr("aria-expanded") == "false") {
+        console.log("Clicking the workspace Expander Button to unhide the workspace contents on the Quick Acess Navigation Pane.")
+        $workspaceExpanderButton.click();
     }
 
     function QuickAccessPaneLoaded(mSummary) {
