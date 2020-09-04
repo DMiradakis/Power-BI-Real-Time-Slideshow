@@ -9,7 +9,7 @@
 <img src="https://img.shields.io/badge/readme%20last%20updated-2020--09--04-blue">
 
 ## TL;DR :tada:
-This is an open source Google Chrome extension for displaying a Power BI **Report** as a refreshing slideshow in the **Power BI Service** (old user-inteface mode only).
+This is an open source Google Chrome extension for displaying a Power BI **report** as a refreshing slideshow in the **Power BI Service** (old user-inteface mode only).
 
 ## The Problems :x:
 
@@ -71,7 +71,7 @@ The popup will be initialized with default values for the refresh time and slide
 - Make sure to stop the extension before you navigate to a different Power BI report.
 - This only works for Power BI reports (Power BI dashboards have their own refresh abilities already built into the Power BI Service).
 - This only works in the old user-interface mode of the Power BI Service.
-- Any questions, questions, or other comments? [Open up an issue](https://github.com/DMiradakis/Power-BI-Real-Time-Slideshow/issues).
+- Any questions, comments, or concerns? [Open up an issue](https://github.com/DMiradakis/Power-BI-Real-Time-Slideshow/issues).
 
 ## Construction Tools :hammer:
 - HTML
