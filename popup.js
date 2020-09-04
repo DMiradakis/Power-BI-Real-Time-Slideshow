@@ -5,7 +5,7 @@ function save_slide_time_options() {
 
     var slide_time = document.getElementById('slide_time').value;
 
-    chrome.storage.sync.set(
+    chrome.storage.local.set(
         { slide_time: slide_time }
     );
 
@@ -22,7 +22,7 @@ function save_refresh_time_options() {
 
     var refresh_time = document.getElementById('refresh_time').value;
 
-    chrome.storage.sync.set(
+    chrome.storage.local.set(
         { refresh_time: refresh_time }
     );
 
@@ -36,7 +36,7 @@ function save_refresh_time_options() {
 }
 
 function stop_execution() {
-    chrome.storage.sync.set(
+    chrome.storage.local.set(
         { execute_trigger: 0 },
         function () {
             chrome.runtime.sendMessage({ execute: "stop" });
@@ -48,7 +48,7 @@ function stop_execution() {
 }
 
 function start_execution() {
-    chrome.storage.sync.set(
+    chrome.storage.local.set(
         { execute_trigger: 1 },
         function () {
             chrome.runtime.sendMessage({ execute: "start" });
@@ -61,7 +61,7 @@ function start_execution() {
 
 // Restores default values for the Slide Time and Refresh Time.
 function restore_options() {
-    chrome.storage.sync.get({
+    chrome.storage.local.get({
         slide_time: 25, refresh_time: 180
     }, function (items) {
         document.getElementById('slide_time').value = items.slide_time;

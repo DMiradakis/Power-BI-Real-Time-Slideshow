@@ -2,92 +2,92 @@
 <html>
 <head>
 
-    <!--Reference Libraries-->
-    <script type="text/javascript" src="https://getbootstrap.com/dist/js/bootstrap.js"></script>
-
     <title>Power BI Real-Time Slideshow</title>
     <!--Reference Custom CSS file-->
     <link rel="stylesheet" type="text/css" href="./CSS/primer.css" />
     <link rel="stylesheet" type="text/css" href="./CSS/popup.css" />
 
 </head>
-    <body class="border">
+<body class="border">
 
-        <!--First Container-->
-        <div class="d-flex flex-column" style="padding: 5px 0;" id="title_container">
+    <!--First Container-->
+    <div class="d-flex flex-column" style="padding: 5px 0;" id="title_container">
 
-            <div class="border-bottom d-flex flex-justify-center">
-                <a href="https://imgbb.com/"><img src="https://i.ibb.co/vx5CZrd/icon48.png" alt="icon48" border="0"></a>
-                <a href="https://imgbb.com/"><img src="https://i.ibb.co/2Pfgx16/Play-Pause-Button.png" alt="icon48" border="0"></a>
-            </div>
-
-            <div>
-                <h2 style="text-align: center; font-size: 22px;">Power BI Real-Time Slideshow</h2>
-            </div>
-            
+        <div class="border-bottom d-flex flex-justify-center">
+            <a href="https://imgbb.com/"><img src="https://i.ibb.co/vx5CZrd/icon48.png" alt="icon48" border="0"></a>
+            <a href="https://imgbb.com/"><img src="https://i.ibb.co/2Pfgx16/Play-Pause-Button.png" alt="icon48" border="0"></a>
         </div>
 
-        <!--Second Container-->
-        <div class="border-top d-flex flex-md-row">
-
-            <h4 class="title" style="text-align: left; padding: 5px 0;">Refresh Time:</h4>
-
-            <select class="flex-1" id="refresh_time">
-                <option value=0>Disabled</option>
-                <option value=10>10s</option>
-                <option value=60>1min</option>
-                <option value=120>2mins</option>
-                <option value=180>3mins</option>
-                <option value=240>4mins</option>
-                <option value=300>5mins</option>
-                <option value=600>10mins</option>
-                <option value=900>15mins</option>
-                <option value=1800>30mins</option>
-                <option value=3600>60mins</option>
-            </select>
-
-            <button class="btn btn-sm flex-1" type="button" id="refresh_time_save">Save</button>
-            <div id="refresh_status"></div>
-
+        <div>
+            <h2 style="text-align: center; font-size: 22px;">
+                Power BI Real-Time Slideshow
+                <span class="IssueLabel bg-blue text-white mr-1" title="Label: Version Number" id="version">v2.3.0</span> 
+            </h2>
         </div>
 
-        <!--Third Container-->
-        <div class="border-top d-flex flex-md-row">
+    </div>
 
-            <h4 class="title" style="text-align: left; padding: 5px 0;">Slide Time:</h4>
+    <!--Second Container-->
+    <div class="border-top d-flex flex-md-row">
 
-            <select class="flex-1" id="slide_time">
-                <option value=5>5s</option>
-                <option value=10>10s</option>
-                <option value=15>15s</option>
-                <option value=20>20s</option>
-                <option value=25>25s</option>
-                <option value=30>30s</option>
-                <option value=35>35s</option>
-                <option value=40>40s</option>
-                <option value=45>45s</option>
-                <option value=50>50s</option>
-                <option value=55>55s</option>
-                <option value=60>60s</option>
-                <option value=120>2mins</option>
-                <option value=180>3mins</option>
-                <option value=240>4mins</option>
-                <option value=300>5mins</option>
-            </select>
+        <h4 class="title" style="text-align: left; padding: 5px 0;">Refresh Time:</h4>
 
-            <button class="btn btn-sm flex-1" type="button" id="slide_time_save">Save</button>
-            <div id="slide_status"></div>
+        <select class="form-select flex-1" id="refresh_time">
+            <option value=0>Disabled</option>
+            <option value=10>10s (Dev only)</option>
+            <option value=60>1min</option>
+            <option value=120>2mins</option>
+            <option value=180>3mins</option>
+            <option value=240>4mins</option>
+            <option value=300>5mins</option>
+            <option value=600>10mins</option>
+            <option value=900>15mins</option>
+            <option value=1800>30mins</option>
+            <option value=3600>60mins</option>
+        </select>
 
-        </div>
+        <button class="btn btn-sm flex-1" type="button" id="refresh_time_save">Save</button>
+        <div id="refresh_status"></div>
 
-        <!--Fourth Container-->
-        <div class="d-flex flex-md-row">
-            <button class="btn btn-primary flex-1" id="play">Play</button>
-            <button class="btn btn-danger flex-1" id="stop">Stop</button>
-        </div>
+    </div>
 
-        <script scr="jquery-3.4.1.js"></script>
-        <script src="popup.js"></script>
+    <!--Third Container-->
+    <div class="border-top d-flex flex-md-row">
 
-    </body>
+        <h4 class="title" style="text-align: left; padding: 5px 0;">Slide Time:</h4>
+
+        <select class="form-select flex-1" id="slide_time">
+            <option value=5>5s</option>
+            <option value=10>10s</option>
+            <option value=15>15s</option>
+            <option value=20>20s</option>
+            <option value=25>25s</option>
+            <option value=30>30s</option>
+            <option value=35>35s</option>
+            <option value=40>40s</option>
+            <option value=45>45s</option>
+            <option value=50>50s</option>
+            <option value=55>55s</option>
+            <option value=60>60s</option>
+            <option value=120>2mins</option>
+            <option value=180>3mins</option>
+            <option value=240>4mins</option>
+            <option value=300>5mins</option>
+        </select>
+
+        <button class="btn btn-sm flex-1" type="button" id="slide_time_save">Save</button>
+        <div id="slide_status"></div>
+
+    </div>
+
+    <!--Fourth Container-->
+    <div class="d-flex flex-md-row">
+        <button class="btn btn-primary flex-1" id="play">Play</button>
+        <button class="btn btn-danger flex-1" id="stop">Stop</button>
+    </div>
+
+    <script scr="jquery-3.4.1.js"></script>
+    <script src="popup.js"></script>
+
+</body>
 </html>

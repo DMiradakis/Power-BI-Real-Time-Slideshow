@@ -3,20 +3,32 @@ var slideTime;
 var refreshTime;
 var elapsedTime = 0;
 var execute = 1;
-var workspaceName;
-var reportName;
 var chromeWorkspaceName;
 var chromeReportName;
 
 
+function GetReportMetaDataNames() {
+
+    // Determine the report's workspace name.
+    let workspaceName = $("button.workspaceName").attr("aria-label");
+
+    // Determine the report name.
+    let reportName = $("head > title").text();
+    reportName = reportName.replace(' - Power BI', '');
+
+    // Return the names.
+    return { workspaceName: workspaceName, reportName: reportName }
+}
+
+
 function ImportRefresh() {
 
-    // Retrieve the name of the currently selected report from the top left-hand corner of the page.
-    var reportTitle = $("head > title").text();
-    reportTitle = reportTitle.replace(' - Power BI', '');
+    // Retrieve the report and workspace names. Set the results to variables that will be used in the below IF - ELSE IF statements.
+    let names = GetReportMetaDataNames();
+    let reportName = names.reportName;
 
     // Invoke listener for added list item under Datasets on the quick access navigation pane.
-    $("div.quickAccessPanePlaceHolder").mutationSummary("connect", QuickAccessPaneLoaded, [{ element: "li.item.ng-star-inserted[title='" + reportTitle + "']" }]);
+    $("div.quickAccessPanePlaceHolder").mutationSummary("connect", QuickAccessPaneLoaded, [{ element: "li.item.ng-star-inserted" }]);
 
     // Expand the navigation pane for the current Workspace.
     $("button.expanderButton", "div.paneExpanderHeader").click();
@@ -24,24 +36,21 @@ function ImportRefresh() {
     function QuickAccessPaneLoaded(mSummary) {
 
         // Disconnect listener.
-        $("div.quickAccessPanePlaceHolder").mutationSummary("disconnect", QuickAccessPaneLoaded, [{ element: "li.item.ng-star-inserted[title='" + reportTitle + "']" }]);
+        $("div.quickAccessPanePlaceHolder").mutationSummary("disconnect", QuickAccessPaneLoaded, [{ element: "li.item.ng-star-inserted" }]);
 
         if (mSummary[0]["added"]) {
 
             // Invoke listener for popup menu.
             $(document).mutationSummary("connect", DatasetEllipsisClicked, [{ element: "button.mat-menu-item" }]);
 
-            // Show hidden list elements on the quick access navigation pane.
-            $("li").show();
+            // Search the DOM to find the dataset ellipsis button under the Datasets group on the Quick Access Navigation Pane.
+            let $quickAccessExpansionPane = $("button.headerButton > span[title='Datasets']").parent().parent();
+            let $datasetTextLabel = $quickAccessExpansionPane.find("div.textLabel[title='" + reportName + "']");
+            let $datasetQuickAccessButton = $datasetTextLabel.parents("quick-access-button").last();
 
-            // Filter navigation pane's DOM to Dataset list.
-            var $datasetItems = $("button.headerButton[aria-label='Datasets']").next();
+            // Find the ellipsis button.
+            let $datasetEllipsisButton = $datasetQuickAccessButton.find("button.mat-menu-trigger.openMenu")
 
-            // Dynamically find the list item corresponding to the currently opened report.
-            var $datasetName = $datasetItems.find("li.item.ng-star-inserted[title='" + reportTitle + "']");
-
-            // Find the ellipsis button corresponding to the list item.
-            var $datasetEllipsisButton = $datasetName.find("button.mat-menu-trigger.openMenu");
             // Click the ellipsis button to load the popup menu.
             $datasetEllipsisButton.click();
 
@@ -56,59 +65,45 @@ function ImportRefresh() {
         if (mSummary[0]["added"]) {
 
             // Navigate the DOM to find the buttons on the popup menu.
-            var $matMenuButtons = $("div.mat-menu-content").find("button");
+            let $matMenuButtons = $("div.mat-menu-content").find("button");
 
             // Find the dataset's Refresh Button.
-            var $refreshButton = $matMenuButtons.find("span:contains('Refresh now')").parent();
+            let $refreshButton = $matMenuButtons.find("span:contains('Refresh now')").parent();
             // Click the Refresh Button.
             $refreshButton.click();
-
         }
     }
 }
 
 
-function GetNames() {
+function UpdateChromeVariables(reportName, workspaceName) {
 
-    // Retrieve the name of the currently selected Workspace from the top left-hand corner of the page.
-    //var $spans = $("span.pbi-fcl-np[ng-bind='breadcrumb.label']").first();
-    var $spans = $("a.ng-tns-c11-7.ng-star-inserted[queryparamshandling='preserve']").first();
-    var workspaceName = $spans.text().trim();
+    chromeReportName = reportName;
     chromeWorkspaceName = workspaceName;
-
-    // Retrieve the name of the currently selected report from the top left-hand corner of the page.
-    var reportTitle = $("head > title").text();
-    reportTitle = reportTitle.replace(' - Power BI', '');
-    chromeReportName = reportTitle;
 
     console.log(`Chrome Workspace Name: ${chromeWorkspaceName}.`);
     console.log(`Chrome Report Name: ${chromeReportName}.`);
 
     // Write the Workspace's name and Report's name to Chrome Storage.
     console.log("Saving Workspace Name and Report Name to Chrome.Storage.");
-    chrome.storage.sync.set(
+    chrome.storage.local.set(
         { workspaceName: chromeWorkspaceName, reportName: chromeReportName },
         function () {
             // Now determine the Connectivity Mode of the current Report.
             console.log("Initializing process to determine Connectivity Mode.");
-            DetermineConnectivityMode();
+            DetermineConnectivityMode(reportName);
         }
-    )
-
+    );
 }
 
 
-function DetermineConnectivityMode() {
-
-    // Retrieve the name of the currently selected report from the top left-hand corner of the page.
-    var reportTitle = $("head > title").text();
-    reportTitle = reportTitle.replace(' - Power BI', '');
+function DetermineConnectivityMode(reportName) {
 
     // Invoke listener for added list item under Datasets on the quick access navigation pane.
-    $("div.quickAccessPanePlaceHolder").mutationSummary("connect", QuickAccessPaneLoaded, [{ element: "li.item.ng-star-inserted[title='" + reportTitle + "']" }]);
+    $("div.quickAccessPanePlaceHolder").mutationSummary("connect", QuickAccessPaneLoaded, [{ element: "li.item.ng-star-inserted" }]);
 
     // Find the main expansion button for the Quick Access Navigation Pane.
-    var $paneExpanderButton = $("button.paneExpanderButton.expanderBtn");
+    let $paneExpanderButton = $("button.paneExpanderButton.expanderBtn");
 
     // Check the button to see if the pane is expanded.
     if ($paneExpanderButton.attr("aria-expanded") == "false") {
@@ -117,7 +112,7 @@ function DetermineConnectivityMode() {
     }
 
     // Find the expansion button for the workspace's contents on the Quick Access Navigation Pane.
-    var $workspaceExpanderButton = $("div.paneExpanderHeader > button.expanderButton.switcher")
+    let $workspaceExpanderButton = $("div.paneExpanderHeader > button.expanderButton.switcher")
 
     // Check the button to see if the workspace contents are expanded.
     if ($workspaceExpanderButton.attr("aria-expanded") == "false") {
@@ -128,7 +123,7 @@ function DetermineConnectivityMode() {
     function QuickAccessPaneLoaded(mSummary) {
 
         // Disconnect listener.
-        $("div.quickAccessPanePlaceHolder").mutationSummary("disconnect", QuickAccessPaneLoaded, [{ element: "li.item.ng-star-inserted[title='" + reportTitle + "']" }]);
+        $("div.quickAccessPanePlaceHolder").mutationSummary("disconnect", QuickAccessPaneLoaded, [{ element: "li.item.ng-star-inserted" }]);
 
         console.log("Quick access navigation pane successfully expanded.");
         console.log("Navigating to Dataset Ellipsis button.");
@@ -138,17 +133,13 @@ function DetermineConnectivityMode() {
             // Invoke listener for popup menu.
             $(document).mutationSummary("connect", DatasetEllipsisClicked, [{ element: "button.mat-menu-item" }]);
 
-            // Show hidden list elements on the quick access navigation pane.
-            $("li").show();
-
             // Filter navigation pane's DOM to Dataset list.
-            var $datasetItems = $("button.headerButton[aria-label='Datasets']").next();
+            let $quickAccessExpansionPane = $("button.headerButton > span[title='Datasets']").parent().parent();
+            let $datasetTextLabel = $quickAccessExpansionPane.find("div.textLabel[title='" + reportName + "']");
+            let $datasetQuickAccessButton = $datasetTextLabel.parents("quick-access-button").last();
 
-            // Dynamically find the list item corresponding to the currently opened report.
-            var $datasetName = $datasetItems.find("li.item.ng-star-inserted[title='" + reportTitle + "']");
-
-            // Find the ellipsis button corresponding to the list item.
-            var $datasetEllipsisButton = $datasetName.find("button.mat-menu-trigger.openMenu");
+            // Find the ellipsis button.
+            let $datasetEllipsisButton = $datasetQuickAccessButton.find("button.mat-menu-trigger.openMenu")
 
             if ($datasetEllipsisButton.length) {
                 console.log("Dataset Ellipsis button found.");
@@ -170,9 +161,6 @@ function DetermineConnectivityMode() {
 
             // Invoke listener to identify when a navigation has taken place.
             $(document).mutationSummary("connect", SearchUI, [{ element: "span.refreshSectionTitle" }]);
-
-            // Navigate the DOM to find the buttons on the popup menu.
-            var $matMenuButtons = $("div.mat-menu-content").find("button.mat-menu-item");
 
             // Find the dataset's Settings Button.
             var $settingsButton = $(document).find("span:contains('Settings')").parent();
@@ -203,7 +191,7 @@ function DetermineConnectivityMode() {
             // Check which variable returns a value.
             if ($importCheck.length) {
                 console.log("Connectivity Mode Determined: Import. Navigating back to the report.");
-                chrome.storage.sync.set(
+                chrome.storage.local.set(
                     // Store Connectivity Mode in Chrome Storage.
                     { connectivityMode: "Import" },
                     function () {
@@ -214,7 +202,7 @@ function DetermineConnectivityMode() {
             }
             else if ($directQueryCheck.length) {
                 console.log("Connectivity Mode Determined: Direct Query. Navigating back to the report.");
-                chrome.storage.sync.set(
+                chrome.storage.local.set(
                     // Store Connectivity Mode in Chrome Storage.
                     { connectivityMode: "Direct Query" },
                     function () {
@@ -231,20 +219,11 @@ function DetermineConnectivityMode() {
         // Invoke listener for popup menu buttons.
         $(document).mutationSummary("connect", ReportEllipsisClicked, [{ element: "button.mat-menu-item" }]);
 
-        // Show hidden list elements on the quick access navigation pane.
-        $("li").show();
-
-        // Filter navigation pane's DOM to Report list.
-        var $reportItems = $("button.headerButton[aria-label='Reports']").next();
-
-        // Dynamically find the list item corresponding to the currently opened report.
-        var $reportName = $reportItems.find("li.item.ng-star-inserted[title='" + reportTitle + "']");
-
-        // Find the ellipsis button corresponding to the list item.
-        var $reportEllipsisButton = $reportName.find("button.mat-menu-trigger.openMenu");
-        // Click the ellipsis button to load the popup menu.
-        $reportEllipsisButton.click();
-
+        // Find the report name button on the Quick Access Navigation Pane. Due to a glitch, click the corresponding ellipsis button of that element.
+        var $quickAccessExpansionPane = $("button.headerButton > span[title='Reports']").parent().parent();
+        var $datasetTextLabel = $quickAccessExpansionPane.find("div.textLabel[title='" + reportName + "']");
+        var $datasetQuickAccessButton = $datasetTextLabel.parents("quick-access-button").last();
+        $datasetQuickAccessButton.find("button.mat-menu-trigger.openMenu").click();
     }
 
     function ReportEllipsisClicked(mSummary) {
@@ -282,17 +261,14 @@ function DetermineConnectivityMode() {
 window.onload = function () {
 
     // Retrieve values from chrome.storage and update global variables. Include default values for the chrome.storage pairs.
-    chrome.storage.sync.get(
+    chrome.storage.local.get(
         { execute_trigger: 0, slide_time: 25, refresh_time: 180, workspaceName: "unknown", reportName: "unknown", connectivityMode: "undetermined" },
         function (items) {
 
-            // Retrieve the name of the currently selected Workspace from the top left-hand corner of the page.
-            var $spans = $("a.ng-tns-c11-7.ng-star-inserted[queryparamshandling='preserve']").first();
-            var workspaceName = $spans.text().trim();
-
-            // Retrieve the name of the currently selected report from the top left-hand corner of the page.
-            var reportTitle = $("head > title").text();
-            var reportName = reportTitle.replace(' - Power BI', '');
+            // Retrieve the report and workspace names. Set the results to variables that will be used in the below IF - ELSE IF statements.
+            let names = GetReportMetaDataNames();
+            let reportName = names.reportName;
+            let workspaceName = names.workspaceName;
 
             // Write Chrome variables to global variables.
             console.log("Retrieving variables from Chrome.Storage.");
@@ -306,11 +282,11 @@ window.onload = function () {
             // Check if this is a new Report W.R.T. the extension and Chrome variables.
             if (execute === 1 && (connectivityMode === "undetermined" || chromeReportName != reportName || chromeWorkspaceName != workspaceName)) {
 
-                chrome.storage.sync.set(
+                chrome.storage.local.set(
                     { workspaceName: "unknown", reportName: "unknown", connectivityMode: "undetermined" },
                     function () {
                         console.log("Determining Workspace and Report Name.");
-                        GetNames();
+                        UpdateChromeVariables(reportName, workspaceName);
                     }
                 )
             }
@@ -391,7 +367,10 @@ function DirectQuerySlideShowLoop() {
             if (elapsedTime > refreshTime) {
                 console.log("Refreshing dataset.");
                 // Unlike for Import Reports, the refresh button on the top banner BOTH makes a request to the data source(s) AND updates associated visuals.
-                $(document).find("button.refresh").click();
+                $(document).find("button.refresh").click(function () {
+                    console.log("Refresh button clicked.");
+                });
+                
 
                 // Reset the elapsed time if the Refresh Button is clicked.
                 elapsedTime = 0;
@@ -401,6 +380,9 @@ function DirectQuerySlideShowLoop() {
 
             // Accumulate the elapsed time from the previous refresh.
             elapsedTime = elapsedTime + parseInt(slideTime, 10);
+
+            //let timeRemaining = refreshTime - elapsedTime;
+            //timeRemaining < 0 ? console.log("Refresh iminent!") : 
 
         },
 
