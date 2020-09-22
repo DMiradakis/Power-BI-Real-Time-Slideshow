@@ -11,8 +11,6 @@
   },
 
   "permissions": [
-    "activeTab",
-    "clipboardWrite",
     "tabs",
     "*://app.powerbi.com/*",
     "declarativeContent",
