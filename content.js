@@ -257,6 +257,24 @@ function DetermineConnectivityMode(reportName) {
     }
 }
 
+function CheckSlideTime() {
+    chrome.storage.local.get({ slide_time: 25 }, result => {
+        if (slideTime != result.slide_time) {
+            slideTime = result.slide_time;
+            console.log(`Slide time changed to ${slideTime} seconds.`);
+        }
+    });
+}
+
+function CheckRefreshTime() {
+    chrome.storage.local.get({ refresh_time: 180 }, result => {
+        if (refreshTime != result.refresh_time) {
+            refreshTime = result.refresh_time;
+            console.log(`Refresh time changed to ${refreshTime} seconds.`);
+        }
+    });
+}
+
 
 window.onload = function () {
 
@@ -323,14 +341,14 @@ function firstFullScreen() {
 function ImportSlideShowLoop() {
 
     // The setInterval function creates an infinite loop which is desired.
-    setInterval(
+    setTimeout(
         function () {
-
+            
             $(document).find("button.fullScreenNext").click()
             $(document).find("button.exitFullScreenBtn").click()
 
-            // This conditional statement prevents the data source(s) from being overloaded by constant querying.
-            if (elapsedTime > refreshTime) {
+            // This conditional statement prevents the data source(s) from being overloaded by constant querying. Ensure that the refresh time is a positive number (enabled).
+            if (refreshTime > 0 && elapsedTime > refreshTime) {
                 console.log("Refreshing dataset.");
                 ImportRefresh();
 
@@ -345,7 +363,15 @@ function ImportSlideShowLoop() {
             $(document).find("button.enterFullScreenBtn").click();
 
             // Accumulate the elapsed time from the previous refresh.
-            elapsedTime = elapsedTime + parseInt(slideTime, 10);
+            elapsedTime += parseInt(slideTime, 10);
+
+            // Check chrome storage for a user change in the slide time.
+            CheckSlideTime();
+
+            // Check chrome storage for a user change in the refresh time.
+            CheckRefreshTime();
+
+            ImportSlideShowLoop();
 
         },
 
@@ -357,14 +383,14 @@ function ImportSlideShowLoop() {
 function DirectQuerySlideShowLoop() {
 
     // The setInterval function creates an infinite loop which is desired.
-    setInterval(
+    setTimeout(
         function () {
 
             $(document).find("button.fullScreenNext").click()
             $(document).find("button.exitFullScreenBtn").click()
 
-            // This conditional statement prevents the data source(s) from being overloaded by constant querying.
-            if (elapsedTime > refreshTime) {
+            // This conditional statement prevents the data source(s) from being overloaded by constant querying. Ensure that the refresh time is a positive number (enabled).
+            if (refreshTime > 0 && elapsedTime > refreshTime) {
                 console.log("Refreshing dataset.");
                 // Unlike for Import Reports, the refresh button on the top banner BOTH makes a request to the data source(s) AND updates associated visuals.
                 $(document).find("button.refresh").click(function () {
@@ -379,11 +405,16 @@ function DirectQuerySlideShowLoop() {
             $(document).find("button.enterFullScreenBtn").click();
 
             // Accumulate the elapsed time from the previous refresh.
-            elapsedTime = elapsedTime + parseInt(slideTime, 10);
+            elapsedTime += parseInt(slideTime, 10);
 
-            //let timeRemaining = refreshTime - elapsedTime;
-            //timeRemaining < 0 ? console.log("Refresh iminent!") : 
+            // Check chrome storage for a user change in the slide time.
+            CheckSlideTime();
 
+            // Check chrome storage for a user change in the refresh time.
+            CheckRefreshTime();
+
+            DirectQuerySlideShowLoop();
+            
         },
 
         slideTime * 1000

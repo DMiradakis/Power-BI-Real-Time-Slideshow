@@ -1,8 +1,8 @@
 {
   "name": "Power BI Real-Time Slideshow",
   "manifest_version": 2,
-  "version": "2.3.0",
-  "description": "Display Power BI Reports as refreshing, rotating slideshows in the Power BI Service (old UI mode only).",
+  "version": "2.4.0",
+  "description": "Display Power BI reports as refreshing, rotating slideshows in the Power BI Service (old UI mode only).",
 
   "icons": {
     "16": "img/icon16.png",
@@ -19,8 +19,6 @@
     "storage"
   ],
 
-  "content_security_policy": "script-src 'self' https://code.jquery.com/jquery.min.js https://getbootstrap.com/dist/js/bootstrap.js https://getbootstrap.com/dist/css/bootstrap.css; object-src 'self'",
-
   "background": {
     "scripts": [ "background.js" ],
     "persistent": false
@@ -34,7 +32,7 @@
   "content_scripts": [
     {
       "matches": [ "*://app.powerbi.com/*" ],
-      "js": [ "jquery-3.4.1.js", "angular.min.js", "content.js", "jquery-mutation-summary.js", "mutation-summary.js" ]
+      "js": [ "content.js", "./Javascript Dependencies/jquery-3.4.1.js", "./Javascript Dependencies/jquery-mutation-summary.js", "./Javascript Dependencies/mutation-summary.js" ]
     }
   ]
 }

@@ -1,4 +1,4 @@
-// Load and save default values for the Slide Time and Refresh Time upon the Power BI page loading.
+// Load and save default values for the slide time and refresh time upon the Power BI page loading.
 document.addEventListener('DOMContentLoaded', restore_options);
 
 function save_slide_time_options() {
@@ -9,13 +9,6 @@ function save_slide_time_options() {
         { slide_time: slide_time }
     );
 
-    // Reload the Power BI page upon updating the Slide Time. This is necessary in case the loop has already started
-    // because it would need to be reloaded with the updated Slide Time value.
-    chrome.tabs.executeScript(null,
-        {
-            code: "location.reload()"
-        }
-    );
 }
 
 function save_refresh_time_options() {
@@ -26,13 +19,6 @@ function save_refresh_time_options() {
         { refresh_time: refresh_time }
     );
 
-    // Reload the Power BI page upon updating the Refresh Time. This is necessary in case the loop has already started
-    // because it would need to be reloaded with the updated Refresh Time value.
-    chrome.tabs.executeScript(null,
-        {
-            code: "location.reload()"
-        }
-    );
 }
 
 function stop_execution() {
@@ -59,7 +45,7 @@ function start_execution() {
     )
 }
 
-// Restores default values for the Slide Time and Refresh Time.
+// Restores default values for the slide time and refresh time.
 function restore_options() {
     chrome.storage.local.get({
         slide_time: 25, refresh_time: 180

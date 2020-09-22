@@ -12,28 +12,13 @@ chrome.runtime.onInstalled.addListener(function() {
 
 chrome.runtime.onMessage.addListener(
     function(request) {
-        if (request.execute === "start") {
+        if (request.execute === "start" || request.execute === "stop") {
 
             chrome.tabs.executeScript(null,
                 {
                     code: "location.reload()"
                 }
             );
-
-        }
-    }
-)
-
-chrome.runtime.onMessage.addListener(
-    function(request) {
-        if (request.execute === "stop") {
-
-            chrome.tabs.executeScript(null,
-                {
-                    code: "location.reload()"
-                }
-            );
-
         }
     }
 )
