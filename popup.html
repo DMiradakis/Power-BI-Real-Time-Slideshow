@@ -11,21 +11,36 @@
 <body class="border">
 
     <!--First Container-->
-    <div class="d-flex flex-column" style="padding: 5px 0;" id="title_container">
+    <div class="d-flex flex-column border-bottom" style="padding: 5px 0;" id="title_container">
 
-        <div class="border-bottom d-flex flex-justify-center">
-            <a href="https://imgbb.com/"><img src="https://i.ibb.co/vx5CZrd/icon48.png" alt="icon48" border="0"></a>
-            <a href="https://imgbb.com/"><img src="https://i.ibb.co/2Pfgx16/Play-Pause-Button.png" alt="icon48" border="0"></a>
+        <div class="d-flex flex-justify-center">
+            <a href="https://i.ibb.co/vx5CZrd/icon48.png"><img src="https://i.ibb.co/vx5CZrd/icon48.png" alt="icon48" border="0"></a>
+            <a href="https://i.ibb.co/2Pfgx16/Play-Pause-Button.png"><img src="https://i.ibb.co/2Pfgx16/Play-Pause-Button.png" alt="icon48" border="0"></a>
         </div>
 
         <div>
             <h2 style="text-align: center; font-size: 22px;">
                 Power BI Real-Time Slideshow
-                <span class="IssueLabel bg-blue text-white mr-1" title="Label: Version Number" id="version">v2.4.0</span> 
+                <span class="IssueLabel bg-blue text-white" title="Version Number" id="version">v2.4.0</span> 
             </h2>
         </div>
 
     </div>
+
+    <div class="d-flex flex-column flex-justify-center">
+        <h6 class="anim-pulse bg-blue" style="text-align: center; color: white;">
+            Status messages
+        </h6>
+        <div class="d-flex flex-items-center" id="status_updates" style="height: 80px;">
+            <div class="flash flex-1">
+                Flash message goes here.
+            </div>
+        </div>
+    </div>
+
+    <h6 class="bg-blue" style="text-align: center; color: white;">
+        Controls
+    </h6>
 
     <!--Second Container-->
     <div class="border-top d-flex flex-md-row">
